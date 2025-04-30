@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="pt-br" ng-app="notebooks">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Busca com Lupa</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+  <style>
+    body {
+      font-family: 'Calibri Light', sans-serif;
+      background: #fff;
+           margin: 0;
+  padding: 0;
+  height: 100%;
+      overflow: hidden; /* <- ESSENCIAL pra sumir a rolagem do body */
+    }
+
+    #notebooks {
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  background-color: #f4f4f4;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+
+.fixed-filters {
+  position: sticky;
+  top: 0;
+  background-color: #f4f4f4;
+  padding: 16px 0 12px;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+
+    .search-container {
+      position: relative;
+      margin-bottom: 15px;
+    }
+
+    .search-container input {
+      width: 100%;
+      height: 44px;
+      padding: 10px 12px 10px 42px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .search-icon {
+      position: absolute;
+      top: 50%;
+      left: 14px;
+      transform: translateY(-50%);
+      font-size: 16px;
+      color: #0000008a;
+      pointer-events: none;
+    }
+
+    select {
+      width: 100%;
+      height: 36px;
+      padding: 5px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+      border-radius: 4px;
+    }
+
+    .product-count {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 15px;
+    }
+
+    ul {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      width: 100%;
+    }
+
+    li {
+      background: white;
+      padding: 12px 15px;
+      border-left: 4px solid #3fccb9;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    strong {
+      display: block;
+      color: #444;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 5px;
+    }
+
+    .title-row strong {
+      font-weight: bold;
+      font-size: 16px;
+      color: #444;
+      margin: 0;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .code {
+      font-size: 12px;
+      color: #888;
+      margin-left: 10px;
+      flex-shrink: 0;
+    }
+
+    .material-symbols-outlined {
+  vertical-align: middle;
+  font-size: 20px;
+  margin-right: 6px;
+  color: #0000008a
+}
+
+
+    /* Garante que o layout use toda a tela no mobile */
+    @media (max-width: 600px) {
+  html, body {
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+  }
+
+  #notebooks {
+    padding: 16px 12px;
+  }
+
+  .fixed-filters {
+    padding: 16px 0 10px;
+  }
+
+  .search-container input {
+    width: 100%;
+    font-size: 18px;
+    height: 52px;
+    padding: 10px 12px 10px 42px;
+    border: 1px solid #ccc;
+  }
+
+  select {
+    width: 100%;
+    font-size: 18px;
+    height: 48px;
+    margin-bottom: 16px;
+    padding: 8px 10px;
+  }
+
+  .product-count {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+
+  li {
+    padding: 20px 16px;
+  }
+
+  .title-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .title-row strong {
+    font-size: 20px;
+    white-space: normal;
+    line-height: 1.4;
+  }
+
+  .code {
+    font-size: 17px;
+    color: #666;
+    margin-left: 0;
+  }
+
+  p {
+    font-size: 18px;
+    line-height: 1.6;
+  }
+}
+
+
+
+  </style>
+</head>
+
+<body ng-controller="NotebookListCtrl">
+  <div id="notebooks">
+    
+    <div class="fixed-filters">
+      <div class="search-container">
+        <i class="fas fa-search search-icon"></i>
+        <input
+          type="text"
+          id="query"
+          ng-model="query"
+          placeholder="Pesquisar produtos…"
+          autocomplete="off"
+        />
+      </div>
+
+      <select ng-model="orderList">
+        <option value="name">Ordenar por Nome (A–Z)</option>
+        <option value="-age">Ordenar por Mais Recentes</option>
+        <option value="age">Ordenar por Mais Antigos</option>
+      </select>
+
+      <div class="product-count">
+        <span class="material-symbols-outlined">package_2</span>
+        Produtos: {{(notebooks | filter:query).length}}
+      </div>
+      
+
+    </div> <!-- Fim da fixed-filters -->
+
+    <div class="product-list">
+      <ul>
+        <li ng-repeat="notebook in notebooks | filter:query | orderBy: orderList">
+          <div class="title-row">
+            <strong>{{notebook.name}}</strong>
+            <span class="code">{{notebook.age}}</span>
+          </div>
+          <p>{{notebook.procesor}}</p>
+        </li>
+      </ul>
+    </div>
+    
+
+
+  <script>
+    var notebooks = angular.module('notebooks', []);
+
+    notebooks.controller('NotebookListCtrl', function ($scope) {
+      $scope.notebooks = [
+        {
+          name: "Intermediação em Aplicação – CDBs",
+          procesor: "É um serviço de assessoria que conecta o cliente a instituições financeiras parceiras para aplicar em CDBs. A Funcional seleciona as melhores opções de investimento, cuida de todo o processo e garante praticidade, segurança e rentabilidade acima do CDI.",
+          age: "INV001"
+        },
+        {
+          name: "Intermediação em Aplicação - Tesouro Direto",
+          procesor: "É um serviço de assessoria e intermediação para aplicação no Tesouro Direto, com orientação estratégica e acompanhamento das oportunidades de compra e venda dos títulos públicos federais, garantindo segurança, alinhamento ao perfil do cliente e boa rentabilidade.",
+          age: "INV002"
+        },
+        {
+          name: "Estruturação de Operação – LC / LCI / LCA",
+          procesor: "É um serviço de estruturação financeira para aplicação em LC, LCI e LCA, com intermediação junto a instituições parceiras. A Funcional garante melhor rentabilidade, isenção fiscal para pessoa física e liquidez conforme o perfil e objetivo do cliente.",
+          age: "INV003"
+        },
+        {
+          name: "Estruturação de Operação – CRI",
+          procesor: "É um serviço de estruturação financeira para captação de recursos via emissão de CRI, com lastro em recebíveis imobiliários. A Funcional cuida da modelagem da operação, definição das garantias e intermediação com investidores qualificados e instituições financeiras.",
+          age: "INV004"
+        },
+
+        {
+          name: "Estruturação de Operação - CRA",
+          procesor: "É um serviço de estruturação financeira para captação de recursos via emissão de CRA, com lastro em recebíveis do agronegócio. A Funcional atua na modelagem da operação, definição das garantias e intermediação com securitizadoras e investidores qualificados.",
+          age: "INV005"
+        },
+
+        {
+          name: "Assessoria na Emissão/Compra de Debêntures",
+          procesor: "É um serviço completo de estruturação de operações com debêntures. A Funcional realiza a análise da empresa ou projeto, modelagem financeira, definição de garantias, negociação com investidores e acompanhamento da emissão junto à securitizadora ou instituição financeira.",
+          age: "INV006"
+        },
+
+        {
+          name: "Assessoria na Alocação - Fundos de Renda Fixa",
+          procesor: "É um serviço de assessoria para alocação em fundos de renda fixa. A Funcional analisa o perfil do investidor, indica os fundos mais adequados, acompanha o desempenho da carteira e orienta aportes, resgates ou ajustes conforme o cenário econômico e os objetivos do cliente.",
+          age: "INV007"
+        },
+
+        
+        {
+          name: "Assessoria na Alocação - Fundos Multimercados",
+          procesor: "É um serviço de assessoria para diversificação de investimentos em fundos multimercados. A Funcional avalia o perfil do investidor, indica os fundos mais alinhados aos objetivos, acompanha a performance da carteira e orienta realocações com base no cenário econômico.",
+          age: "INV008"
+        },
+
+        {
+          name: "Assessoria na Alocação - Fundos de Ações",
+          procesor: "Realizamos a análise do perfil do investidor e dos objetivos financeiros para indicar os fundos de ações mais alinhados à estratégia de longo prazo do cliente. Acompanhamos o desempenho da carteira, sugerindo ajustes e novas alocações conforme o cenário de mercado e a performance dos fundos.",
+          age: "INV009"
+        },
+
+        {
+          name: "Assessoria na Alocação - Fundos Internacionais",
+          procesor: "É um serviço que ajuda o cliente a investir em fundos fora do Brasil. A Funcional indica os melhores fundos de acordo com o perfil e objetivos do cliente, acompanha os resultados e orienta ajustes, protegendo o patrimônio com investimentos em moedas e mercados internacionais, considerando cenário econômico internacional e variação cambial.",
+          age: "INV010"
+        },
+
+        {
+          name: "Assessoria na Compra de Ações",
+          procesor: "É um serviço de assessoria para quem quer investir diretamente em ações na Bolsa. A Funcional analisa o perfil do cliente, indica os melhores momentos para comprar ou vender, monta a estratégia e acompanha o mercado junto com o investidor, com segurança e clareza.",
+          age: "INV011"
+        },
+
+        
+        {
+          name: "Estruturação e Operação - Derivativos",
+          procesor: "É um serviço que protege o caixa da empresa contra variações de preço, dólar, juros ou commodities. A Funcional monta a estratégia com contratos como futuros e opções, acompanha o mercado e ajusta a operação para garantir segurança ou potencial de ganho com alavancagem.",
+          age: "INV012"
+        },
+
+        {
+          name: "Operação Estruturada - Commodities",
+          procesor: "É um serviço que ajuda empresas a se protegerem das variações no preço de produtos como soja, milho, café e petróleo. A Funcional monta uma estratégia com apoio de bancos e corretoras para evitar prejuízos com a oscilação do mercado ou até aproveitar para lucrar mais quando o cenário estiver favorável.",
+          age: "INV013"
+        },
+
+
+        {
+          name: "Estruturação de Envio de Recursos ao Exterior",
+          procesor: "É um serviço que organiza e acompanha todo o processo para enviar dinheiro legalmente para fora do Brasil. A Funcional cuida da operação com os bancos e corretoras, garantindo segurança, rapidez e que tudo esteja de acordo com as regras do Banco Central.",
+          age: "INV014"
+        },
+
+        {
+          name: "Parceria Internacional - Atendimento Personalizado",
+          procesor: "É um serviço que ajuda o cliente a investir ou proteger seu patrimônio fora do Brasil. A Funcional entende o que o cliente precisa, conecta com bancos ou gestoras internacionais confiáveis e acompanha todo o processo com segurança e apoio técnico.",
+          age: "INV015"
+        },
+
+        {
+          name: "Consultoria e Intermediação - Previdência Privada (PGBL / VGBL)",
+          procesor: "É um serviço que ajuda o cliente a escolher o plano de previdência ideal para aposentadoria ou sucessão. A Funcional orienta entre PGBL e VGBL, explica os benefícios fiscais, cuida da contratação com a seguradora e acompanha a aplicação ao longo do tempo.",
+          age: "INV016"
+        },
+
+        {
+          name: "Intermediação - Câmbio Comercial / Turismo",
+          procesor: "É um serviço que ajuda pessoas e empresas a comprar ou vender moeda estrangeira com segurança. A Funcional negocia com bancos parceiros, cuida da operação de câmbio e garante que tudo seja feito corretamente e com boas condições.",
+          age: "INV017"
+        },
+
+        
+        {
+          name: "Proteção Patrimonial Internacional via Offshore",
+          procesor: "É um serviço que ajuda o cliente a mandar dinheiro para fora do Brasil de forma legal, criando uma empresa no exterior (offshore) para proteger e guardar parte do seu patrimônio com mais segurança, sigilo e liberdade.",
+          age: "INV018"
+        },
+
+                
+        {
+          name: "Intermediação - Financiamento de Veículos",
+          procesor: "É um serviço que conecta o cliente a bancos parceiros para financiar veículos novos, usados, vans e veículos de médio porte. A Funcional acompanha a proposta, análise de crédito e negociação das condições. O financiamento pode ser personalizado com carência, pagamento apenas de juros mensais e parcelas maiores em datas combinadas (balões), adaptadas ao fluxo de caixa do cliente, como produtores rurais e empresários.",
+          age: "INV019"
+        },
+
+                        
+        {
+          name: "Intermediação - Financiamento Imobiliário",
+          procesor: "É um serviço que ajuda o cliente a financiar imóveis residenciais ou comerciais por meio de bancos parceiros (exceto Safra). A Funcional cuida de tudo: analisa o crédito, verifica se a operação se encaixa nas regras do banco, negocia as melhores condições de pagamento e acompanha o processo até a liberação do dinheiro.",
+          age: "INV020"
+        },
+
+
+                        
+        {
+          name: "Estruturação de Operação - Capital de Giro PJ",
+          procesor: "É um serviço que ajuda empresas a conseguirem dinheiro para reforçar o caixa e manter as operações funcionando. A Funcional analisa quanto a empresa precisa, monta a melhor forma de conseguir o crédito com bancos ou investidores, negocia taxas e prazos, e acompanha até o dinheiro cair na conta.",
+          age: "INV021"
+        },
+
+                                
+        {
+          name: "Estruturação de Crédito via Securitizadora",
+          procesor: "É um serviço que ajuda empresas a conseguir crédito fora do banco, usando recebíveis ou outros bens como garantia. A Funcional analisa o perfil da empresa, monta a melhor estratégia, negocia com investidores e acompanha tudo até o dinheiro ser liberado.",
+          age: "INV022"
+        },
+
+
+        {
+          name: "Assessoria em Crédito Agro",
+          procesor: "É um serviço que ajuda produtores rurais e empresas do agro a conseguir crédito com boas condições. A Funcional analisa quanto o cliente precisa, quais garantias ele pode oferecer, monta a proposta, negocia com os bancos e acompanha tudo até o dinheiro ser liberado.",
+          age: "INV023"
+        },
+
+        
+        {
+          name: "Seguro de Vida e em Vida – Proteção Patrimonial",
+          procesor: "É um serviço que ajuda o cliente a contratar um seguro que protege tanto em vida (casos como doença grave ou invalidez) quanto depois, garantindo que os bens fiquem para os beneficiários sem precisar de inventário. A Funcional orienta tudo com foco em segurança e planejamento.",
+          age: "INV024"
+        }
+
+        
+      ];
+      $scope.orderList = "name";
+    });
+  </script>
+</body>
+</html>
