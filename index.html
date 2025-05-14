@@ -202,11 +202,20 @@
     line-height: 1.6;
   }
 }
+.form-icon {
+  color: #888;
+  font-size: 18px;
+  transition: color 0.2s ease;
+}
 
+.form-icon:hover {
+  color: #0078d4;
+}
 
 
   </style>
 </head>
+
 
 <body ng-controller="NotebookListCtrl">
   <div id="notebooks">
@@ -242,14 +251,23 @@
         <li ng-repeat="notebook in notebooks | filter:query | orderBy: orderList">
           <div class="title-row">
             <strong>{{notebook.name}}</strong>
-            <span class="code">{{notebook.age}}</span>
+        
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="code">{{notebook.age}}</span>
+              <a 
+                ng-href="{{notebook.url}}" 
+                target="_blank" 
+                class="form-icon" 
+                title="Ver página do produto">
+                <i class="fas fa-file-alt"></i>
+              </a>
+            </div>
           </div>
           <p>{{notebook.procesor}}</p>
         </li>
+     
       </ul>
     </div>
-    
-
 
   <script>
     var notebooks = angular.module('notebooks', []);
@@ -259,59 +277,69 @@
         {
           name: "Intermediação em Aplicação – CDBs",
           procesor: "É um serviço de assessoria que conecta o cliente a instituições financeiras parceiras para aplicar em CDBs. A Funcional seleciona as melhores opções de investimento, cuida de todo o processo e garante praticidade, segurança e rentabilidade acima do CDI.",
-          age: "INV001"
+          age: "INV001",
+          url:"https://funcionalx.sharepoint.com/sites/produtos/SitePages/Produtos%20INV/Intermedia%C3%A7%C3%A3o-em-Aplica%C3%A7%C3%A3o-%E2%80%93-CDBs.aspx"
         },
         {
           name: "Intermediação em Aplicação - Tesouro Direto",
           procesor: "É um serviço de assessoria e intermediação para aplicação no Tesouro Direto, com orientação estratégica e acompanhamento das oportunidades de compra e venda dos títulos públicos federais, garantindo segurança, alinhamento ao perfil do cliente e boa rentabilidade.",
-          age: "INV002"
+          age: "INV002",
+          url:"https://funcionalx.sharepoint.com/sites/produtos/SitePages/Produtos%20INV/Intermedia%C3%A7%C3%A3o-em-Aplica%C3%A7%C3%A3o---Tesouro-Direto.aspx"
         },
         {
           name: "Estruturação de Operação – LC / LCI / LCA",
           procesor: "É um serviço de estruturação financeira para aplicação em LC, LCI e LCA, com intermediação junto a instituições parceiras. A Funcional garante melhor rentabilidade, isenção fiscal para pessoa física e liquidez conforme o perfil e objetivo do cliente.",
-          age: "INV003"
+          age: "INV003",
+          url:"https://funcionalx.sharepoint.com/sites/produtos/SitePages/Produtos%20INV/Estrutura%C3%A7%C3%A3o-de-Opera%C3%A7%C3%A3o-%E2%80%93-LC---LCI---LCA.aspx"
         },
         {
           name: "Estruturação de Operação – CRI",
           procesor: "É um serviço de estruturação financeira para captação de recursos via emissão de CRI, com lastro em recebíveis imobiliários. A Funcional cuida da modelagem da operação, definição das garantias e intermediação com investidores qualificados e instituições financeiras.",
-          age: "INV004"
+          age: "INV004",
+          url:"https://funcionalx.sharepoint.com/sites/produtos/SitePages/Produtos%20INV/Estrutura%C3%A7%C3%A3o-de-Opera%C3%A7%C3%A3o-%E2%80%93-CRI.aspx"
         },
 
         {
           name: "Estruturação de Operação - CRA",
           procesor: "É um serviço de estruturação financeira para captação de recursos via emissão de CRA, com lastro em recebíveis do agronegócio. A Funcional atua na modelagem da operação, definição das garantias e intermediação com securitizadoras e investidores qualificados.",
-          age: "INV005"
+          age: "INV005",
+          url:"https://funcionalx.sharepoint.com/sites/produtos/SitePages/Produtos%20INV/Estrutura%C3%A7%C3%A3o-de-Opera%C3%A7%C3%A3o---CRA.aspx"
         },
 
         {
           name: "Assessoria na Emissão/Compra de Debêntures",
           procesor: "É um serviço completo de estruturação de operações com debêntures. A Funcional realiza a análise da empresa ou projeto, modelagem financeira, definição de garantias, negociação com investidores e acompanhamento da emissão junto à securitizadora ou instituição financeira.",
-          age: "INV006"
+          age: "INV006",
+          url:"https://funcionalx.sharepoint.com/sites/produtos/SitePages/Produtos%20INV/Assessoria-na-Emiss%C3%A3o-Compra-de-Deb%C3%AAntures.aspx"
         },
 
         {
           name: "Assessoria na Alocação - Fundos de Renda Fixa",
           procesor: "É um serviço de assessoria para alocação em fundos de renda fixa. A Funcional analisa o perfil do investidor, indica os fundos mais adequados, acompanha o desempenho da carteira e orienta aportes, resgates ou ajustes conforme o cenário econômico e os objetivos do cliente.",
-          age: "INV007"
+          age: "INV007",
+          url:"https://funcionalx.sharepoint.com/sites/produtos/SitePages/Produtos%20INV/Assessoria-na-Aloca%C3%A7%C3%A3o---Fundos-de-Renda-Fixa.aspx"
         },
 
         
         {
           name: "Assessoria na Alocação - Fundos Multimercados",
           procesor: "É um serviço de assessoria para diversificação de investimentos em fundos multimercados. A Funcional avalia o perfil do investidor, indica os fundos mais alinhados aos objetivos, acompanha a performance da carteira e orienta realocações com base no cenário econômico.",
-          age: "INV008"
+          age: "INV008",
+          url:"https://funcionalx.sharepoint.com/sites/produtos/SitePages/Assessoria-na-Aloca%C3%A7%C3%A3o---Fundos-Multimercados.aspx"
         },
 
         {
           name: "Assessoria na Alocação - Fundos de Ações",
           procesor: "Realizamos a análise do perfil do investidor e dos objetivos financeiros para indicar os fundos de ações mais alinhados à estratégia de longo prazo do cliente. Acompanhamos o desempenho da carteira, sugerindo ajustes e novas alocações conforme o cenário de mercado e a performance dos fundos.",
-          age: "INV009"
+          age: "INV009",
+          url:"https://funcionalx.sharepoint.com/sites/produtos/SitePages/Produtos%20INV/Assessoria-na-Aloca%C3%A7%C3%A3o---Fundos-de-A%C3%A7%C3%B5es.aspx"
         },
 
         {
           name: "Assessoria na Alocação - Fundos Internacionais",
           procesor: "É um serviço que ajuda o cliente a investir em fundos fora do Brasil. A Funcional indica os melhores fundos de acordo com o perfil e objetivos do cliente, acompanha os resultados e orienta ajustes, protegendo o patrimônio com investimentos em moedas e mercados internacionais, considerando cenário econômico internacional e variação cambial.",
-          age: "INV010"
+          age: "INV010",
+          url:"https://funcionalx.sharepoint.com/sites/produtos/SitePages/Produtos%20INV/Assessoria-na-Aloca%C3%A7%C3%A3o---Fundos-Internacionais.aspx"
         },
 
         {
